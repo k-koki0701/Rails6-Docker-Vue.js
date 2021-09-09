@@ -1,21 +1,26 @@
 FROM ruby:2.6.5
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN curl https://deb.nodesource.com/setup_12.x | bash
+RUN wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo 'deb http://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn
+RUN apt-get update && apt-get install -y nodejs --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y postgresql-client --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs vim yarn
+
 RUN mkdir /rails6_practice_1
 WORKDIR /rails6_practice_1
+
 COPY Gemfile /rails6_practice_1/Gemfile
 COPY Gemfile.lock /rails6_practice_1/Gemfile.lock
+
+RUN gem install bundler
 RUN bundle install
+
 COPY . /rails6_practice_1
 
-# Add a script to be executed every time the container starts.
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
+RUN mkdir -p tmp/sockets
+
 EXPOSE 3000
 
-# Start the main process.
 CMD ["rails", "server", "-b", "0.0.0.0"]

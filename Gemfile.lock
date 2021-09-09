@@ -96,6 +96,8 @@ GEM
     minitest (5.14.4)
     msgpack (1.4.2)
     nio4r (2.5.8)
+    nokogiri (1.12.4-x86_64-darwin)
+      racc (~> 1.4)
     nokogiri (1.12.4-x86_64-linux)
       racc (~> 1.4)
     pg (1.2.3)
@@ -213,7 +215,7 @@ DEPENDENCIES
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers
-  webpacker (~> 4.x)
+  webpacker (~> 4.0)
 
 RUBY VERSION
    ruby 2.6.5p114
